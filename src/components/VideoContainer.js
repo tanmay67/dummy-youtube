@@ -6,10 +6,6 @@ import { addVideos, removeVideos } from "../utils/videosSlice";
 import VideoCard, { HocAdVideoCard } from "./VideoCard";
 import { v4 as uuid } from "uuid";
 
-const generateRandommNumber = () => {
-  return (Math.random() * 49).toFixed(0);
-};
-
 const VideoContainer = () => {
   const ref = useRef(null);
   const dispatch = useDispatch();
@@ -18,12 +14,19 @@ const VideoContainer = () => {
   });
 
   const getVideos = async (offsetData) => {
+    console.log("triggered");
     try {
       const resp = await fetch(
         `https://randomuser.me/api/?page=${offsetData}&results=10`
       );
       const data = await resp.json();
-      dispatch(addVideos(data.results));
+      console.log(data);
+
+      let info = [];
+      for (let i = 0; i <= 10 - 1; i++) {
+        info.push(exampleData.items[Math.floor(Math.random() * 50)]);
+      }
+      dispatch(addVideos(info));
     } catch (error) {
       console.log(error);
     }
@@ -61,13 +64,9 @@ const VideoContainer = () => {
         <div className="flex flex-wrap justify-evenly">
           {videosData.length !== 0
             ? videosData.map((video) => {
-                let randomNumber = generateRandommNumber();
                 return (
-                  <Link
-                    to={`/watch?v=${exampleData.items[randomNumber].id}`}
-                    key={uuid()}
-                  >
-                    <VideoCard info={exampleData.items[randomNumber]} />
+                  <Link to={`/watch?v=${video.id}`} key={uuid()}>
+                    <VideoCard info={video} />
                   </Link>
                 );
               })

@@ -36,5 +36,10 @@
 
 .head_image_adjustment {
   position: relative;
+  top: 13px;
+}
+
+.head_avatar_adjustment {
+  position: relative;
   top: 4px;
 }

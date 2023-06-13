@@ -21,12 +21,22 @@ const Head = () => {
 
   const getSearchSuggesstionsApi = async () => {
     try {
-      const resp = await fetch(YOUTUBE_SEARCH_API + searchQuery);
+      const resp = await fetch(
+        `https://youtube-keyword-search.p.rapidapi.com/?q=${searchQuery}&hl=en&gl=in`,
+        {
+          method: "GET",
+          headers: {
+            "X-RapidAPI-Key": process.env.REACT_APP_RAPID_KEY,
+            "X-RapidAPI-Host": process.env.REACT_APP_RAPID_HOST,
+          },
+        }
+      );
       const data = await resp.json();
-      setSuggestions(data[1]);
+      console.log(data);
+      setSuggestions(data);
       dispatch(
         cacheResults({
-          [searchQuery]: data[1],
+          [searchQuery]: data,
         })
       );
     } catch (error) {
@@ -39,7 +49,7 @@ const Head = () => {
       if (searchCache[searchQuery]) {
         setSuggestions(searchCache[searchQuery]);
       } else getSearchSuggesstionsApi();
-    }, 200);
+    }, 400);
     return () => {
       clearTimeout(timer);
     };
@@ -49,12 +59,14 @@ const Head = () => {
     <div className="grid grid-flow-col p-5 shadow-lg h-20">
       {/* first section */}
       <div className="flex col-span-1 items-start">
-        <img
-          className="head_image_adjustment h-8 cursor-pointer"
-          src="https://static.vecteezy.com/system/resources/previews/002/292/406/original/hamburger-menu-line-icon-free-vector.jpg"
-          alt="menu"
+        <div
+          class="space-y-1 head_image_adjustment h-8 cursor-pointer"
           onClick={toggleMenyHandler}
-        />
+        >
+          <div class="w-6 h-0.5 bg-gray-600"></div>
+          <div class="w-6 h-0.5 bg-gray-600"></div>
+          <div class="w-6 h-0.5 bg-gray-600"></div>
+        </div>
         <a href="/">
           <img
             className="h-10 mx-2"
@@ -131,7 +143,7 @@ const Head = () => {
       {/* third section */}
       <div className="col-span-1 flex justify-center items-start">
         <img
-          className="head_image_adjustment h-8"
+          className="head_avatar_adjustment h-8"
           src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png"
           alt="user"
         />
